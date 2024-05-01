@@ -75,7 +75,7 @@ module.exports = grammar({
             $._eclFocusConcept,
             seq('(', $._ws, $.expressionConstraint, $._ws, ')')
           ),
-          repeat(seq($._ws, $.memberFillerConstraint))
+          repeat(seq($._ws, $.memberFilterConstraint))
         ),
         choice(
           $._eclFocusConcept,
@@ -85,8 +85,8 @@ module.exports = grammar({
       repeat(seq(
         $._ws,
         choice(
-          $.descriptionFillerConstraint,
-          $.conceptFillerConstraint,
+          $.descriptionFilterConstraint,
+          $.conceptFilterConstraint,
         )
       )),
       optional(seq($._ws, $.historySupplement)),
@@ -111,6 +111,28 @@ module.exports = grammar({
         $._ws,
         "]",
       )),
+    ),
+
+    // Concept filter constraint
+    conceptFilterConstraint: $ => seq(
+      "{{",
+      $._ws,
+      /c/i,
+      $._ws,
+      $._conceptFilter,
+      repeat(seq(
+        $._ws,
+        ",",
+        $._conceptFilter,
+      )),
+      $._ws,
+      "}}",
+    ),
+    _conceptFilter: $ => choice(
+      $._definitionStatusFilter,
+      $.moduleFilter,
+      $.effectiveTimeFilter,
+      $.activeFilter,
     ),
 
     // Description filter constraint
@@ -139,6 +161,7 @@ module.exports = grammar({
       $.descriptionIdFilter,
     ),
 
+    // Shared filters
     termFilter: $ => seq(
       /term/i,
       $._ws,
@@ -161,7 +184,7 @@ module.exports = grammar({
       ),
     ),
 
-    languageCode: $ => seq($._alpha, $._alpha),
+    languageCode: _ => /[a-z]{2}/i,
     _languageCodeSet: $ => seq(
       "(", $._ws,
       $.languageCode,
@@ -199,6 +222,148 @@ module.exports = grammar({
       repeat(seq($._mws, $.typeToken)),
       $._ws, ")"),
 
+    dialectFilter: $ => seq(
+      choice($.dialectIdFilter, $.dialectAliasFilter),
+      optional(seq($._ws, $.acceptabilitySet))
+    ),
+    dialectIdFilter: $ => seq(
+      /dialectid/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.subExpressionConstraint,
+        $.dialectIdSet,
+      ),
+    ),
+    dialectIdSet: $ => seq(
+      "(", $._ws,
+      $.eclConceptReference,
+      optional(seq($._mws, $.acceptabilitySet)),
+      repeat(seq(
+        $._mws,
+        $.eclConceptReference,
+        optional(seq($._mws, $.acceptabilitySet)),
+      )),
+      $._ws, ")"),
+    dialectAliasFilter: $ => seq(
+      /dialect/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.dialectAlias,
+        $._dialectAliasSet,
+      ),
+    ),
+    dialectAlias: _ => /[a-z][a-z\d\-]*/i,
+    _dialectAliasSet: $ => seq(
+      "(", $._ws,
+      $.dialectAlias,
+      optional(seq($._mws, $.acceptabilitySet)),
+      repeat(seq(
+        $._mws,
+        $.dialectAlias,
+        optional(seq($._mws, $.acceptabilitySet)),
+      )),
+      $._ws, ")"),
+    acceptabilitySet: $ => choice(
+      $.acceptabilityConceptReferenceSet,
+      $.acceptabilityTokenSet,
+    ),
+    acceptabilityConceptReferenceSet: $ => seq(
+      "(", $._ws,
+      $.eclConceptReference,
+      repeat(seq(
+        $._mws,
+        $.eclConceptReference,
+      )),
+      $._ws, ")"),
+    acceptabilityTokenSet: $ => choice($.preferred, $.acceptable),
+
+    moduleFilter: $ => seq(
+      /module/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.subExpressionConstraint,
+        $.eclConceptReferenceSet,
+      ),
+    ),
+
+    effectiveTimeFilter: $ => seq(
+      /effectivetime/i,
+      $._ws,
+      $.timeComparisonOperator,
+      $._ws,
+      choice(
+        $.timeValue,
+        $._timeValueSet,
+      ),
+    ),
+    timeValue: $ => seq($._QM, optional(seq($.year, $.month, $.day)), $._QM,),
+    _timeValueSet: $ => seq(
+      "(", $._ws,
+      $.timeValue,
+      repeat(seq($._mws, $.timeValue)),
+      $._ws, ")"),
+
+    activeFilter: $ => seq(
+      /active/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice($.activeTrueValue, $.activeFalseValue),
+    ),
+
+    descriptionIdFilter: $ => seq(
+      /id/i,
+      $._ws,
+      $.idComparisonOperator,
+      $._ws,
+      choice(
+        $.sctId,
+        $._sctIdSet,
+      ),
+    ),
+    _sctIdSet: $ => seq(
+      "(", $._ws,
+      $.sctId,
+      repeat(seq($._mws, $.sctId)),
+      $._ws, ")"),
+
+    _definitionStatusFilter: $ => choice(
+      $.definitionStatusIdFilter,
+      $.definitionStatusTokenFilter,
+    ),
+    definitionStatusIdFilter: $ => seq(
+      /definitionstatusid/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.subExpressionConstraint,
+        $.eclConceptReferenceSet,
+      ),
+    ),
+    definitionStatusTokenFilter: $ => seq(
+      /definitionstatus/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.definitionStatusToken,
+        $._definitionStatusTokenSet,
+      ),
+    ),
+    definitionStatusToken: $ => choice($.primitiveToken, $.definedToken),
+    _definitionStatusTokenSet: $ => seq(
+      "(", $._ws,
+      $.definitionStatusToken,
+      repeat(seq($._mws, $.definitionStatusToken)),
+      $._ws, ")"),
+
     // Field names
     refsetFieldNameSet: $ => seq(
       refsetfieldName,
@@ -209,7 +374,7 @@ module.exports = grammar({
       ))
     ),
 
-    refsetfieldName: _ => repeat1($._alpha),
+    refsetfieldName: _ => /[a-z]+/i,
 
     // Concept reference (SCTID)
     _conceptNameInId: $ => seq(
@@ -267,23 +432,9 @@ module.exports = grammar({
       optional($._conceptNameInId),
     ),
 
-    altIdentifierSchemeAlias: $ => seq(
-      $._alpha,
-      repeat(choice(
-        $._alpha,
-        $._dash,
-        $._integerValue,
-      )
-    )),
-
+    altIdentifierSchemeAlias: _ => /[a-z\d\-]+/i,
     altIdentifierCodeWithinQuotes: $ => repeat1($._anyNonEscapedChar),
-    altIdentifierCodeWithoutQuotes: $ => repeat1(choice(
-      $._alpha,
-      $._digit,
-      $._dash,
-      $._dot,
-      "_",
-    )),
+    altIdentifierCodeWithoutQuotes: _ => /[\w\-\.]+/i,
 
     // Refinement
     eclRefinement: $ => seq(
@@ -391,19 +542,38 @@ module.exports = grammar({
     // Literals
     _dot: _ => '.',
     _SP: _ => ' ',
+    _HTAB: _ => '\t',
+    _QM: _ => '"',
+    CR: _ => '\r',
+    LF: _ => '\n',
+    _BS: _ => '\\',
+
     reverseFlag: _ => 'R',
     wildCard: _ => '*',
     many: _ => '*',
     definition: _ => /def/i,
     fullySpecifiedName: _ => /fsn/i,
     synonym: _ => /syn/i,
+    preferred: _ => /preferred/i,
+    acceptable: _ => /acceptable/i,
+    activeTrueValue: _ => /true|1/,
+    activeFalseValue: _ => /false|0/,
+    primitiveToken: _ => /primitive/i,
+    definedToken: _ => /defined/i,
 
     // Tokens
-    _alpha: _ => /[a-z]/i,
     _declaredCardinality: $ => seq("[", $.cardinality, "]", $._ws),
     cardinality: $ => seq($.minValue, "..", $.maxValue),
     minValue: $ => $._nonNegativeIntegerValue,
     maxValue: $ => choice($._nonNegativeIntegerValue, $.many),
+    _nonNegativeIntegerValue: _ => /0|[1-9]\d*/,
+    year: _ => /[1-9]\d{3}/,
+    month: _ => /0[1-9]|1[0-2]/,
+    day: _ => /0[1-9]|[12]\d|3[01]/,
+
+    // Whitespaces
+    _ws: _ => repeat(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
+    _mws: _ => repeat1(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
     
     // Set operators
     _conjunction: _ => choice(
