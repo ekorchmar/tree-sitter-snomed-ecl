@@ -1,22 +1,22 @@
 module.exports = grammar({
-  name: 'snomed-ecl',
+  name: 'snomed_ecl',
 
   rules: {
     // The Entry point: expression Constraint:
     expressionConstraint: $ => seq(
-      $._ws,
+      ws($),
       choice(
         $.refinedExpressionConstraint,
         $._compoundExpressionConstraint,
         $.dottedExpressionConstraint,
         $.subExpressionConstraint),
-      $._ws,
+      ws($),
     ),
 
     // Different types of Expression Constraints:
     refinedExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
-      $._ws,
+      ws($),
       ':',
       $.eclRefinement,
     ),
@@ -30,9 +30,9 @@ module.exports = grammar({
     conjunctionExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
       repeat1(seq(
-        $._ws,
-        $._conjunction,
-        $._ws,
+        ws($),
+        $.conjunction,
+        ws($),
         $.subExpressionConstraint,
       ))
     ),
@@ -40,56 +40,56 @@ module.exports = grammar({
     disjunctionExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
       repeat1(seq(
-        $._ws,
+        ws($),
         $.disjunction,
-        $._ws,
+        ws($),
         $.subExpressionConstraint,
       ))
     ),
 
-    exlusionExpressionConstraint: $ => seq(
+    exclusionExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
-      $._ws,
+      ws($),
       $.exclusion,
-      $._ws,
+      ws($),
       $.subExpressionConstraint,
     ),
 
     dottedExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
       repeat1(seq(
-        $._ws,
+        ws($),
         $._dot,
         $._dottedExpressiontAttribute,
       ))
     ),
 
-    _dottedExpressiontAttribute: $ => seq($._dot, $._ws, $._eclAttributeName),
+    _dottedExpressiontAttribute: $ => seq($._dot, ws($), $._eclAttributeName),
 
     subExpressionConstraint: $ => seq(
-      optional(seq($._constraintOperator, $._ws)),
+      optional(seq($._constraintOperator, ws($))),
       choice(
         seq(
-          optional(seq($.memberOf, $._ws)),
+          optional(seq($.memberOf, ws($))),
           choice(
             $._eclFocusConcept,
-            seq('(', $._ws, $.expressionConstraint, $._ws, ')')
+            seq('(', ws($), $.expressionConstraint, ws($), ')')
           ),
-          repeat(seq($._ws, $.memberFilterConstraint))
+          repeat(seq(ws($), $.memberFilterConstraint))
         ),
         choice(
           $._eclFocusConcept,
-          seq('(', $._ws, $.expressionConstraint, $._ws, ')')
+          seq('(', ws($), $.expressionConstraint, ws($), ')')
         )
       ),
       repeat(seq(
-        $._ws,
+        ws($),
         choice(
           $.descriptionFilterConstraint,
           $.conceptFilterConstraint,
         )
       )),
-      optional(seq($._ws, $.historySupplement)),
+      optional(seq(ws($), $.historySupplement)),
     ),
 
     _eclFocusConcept: $ => choice(
@@ -98,17 +98,17 @@ module.exports = grammar({
       $.altIdentifier,
     ),
 
-    memberOf: _ => seq(
+    memberOf: $ => seq(
       "^",
       optional(seq(
-        $._ws,
+        ws($),
         "[",
-        $._ws,
+        ws($),
         choice(
-          $.refsetFieldNameSet,
+          $._refsetFieldNameSet,
           $.wildCard,
         ),
-        $._ws,
+        ws($),
         "]",
       )),
     ),
@@ -116,16 +116,16 @@ module.exports = grammar({
     // Concept filter constraint
     conceptFilterConstraint: $ => seq(
       "{{",
-      $._ws,
+      ws($),
       /c/i,
-      $._ws,
+      ws($),
       $._conceptFilter,
       repeat(seq(
-        $._ws,
+        ws($),
         ",",
         $._conceptFilter,
       )),
-      $._ws,
+      ws($),
       "}}",
     ),
     _conceptFilter: $ => choice(
@@ -138,16 +138,16 @@ module.exports = grammar({
     // Description filter constraint
     descriptionFilterConstraint: $ => seq(
       "{{",
-      $._ws,
+      ws($),
       /d/i,
-      $._ws,
+      ws($),
       $._descriptionFilter,
       repeat(seq(
-        $._ws,
+        ws($),
         ",",
         $._descriptionFilter,
       )),
-      $._ws,
+      ws($),
       "}}",
     ),
     _descriptionFilter: $ => choice(
@@ -164,9 +164,9 @@ module.exports = grammar({
     // Shared filters
     termFilter: $ => seq(
       /term/i,
-      $._ws,
+      ws($),
       $.stringComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.typedSearchTerm,
         $._typedSearchTermSet,
@@ -175,9 +175,9 @@ module.exports = grammar({
 
     languageFilter: $ => seq(
       /language/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.languageCode,
         $._languageCodeSet,
@@ -186,10 +186,10 @@ module.exports = grammar({
 
     languageCode: _ => /[a-z]{2}/i,
     _languageCodeSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.languageCode,
       repeat(seq($._mws, $.languageCode)),
-      $._ws, ")"),
+      ws($), ")"),
 
     typeFilter: $ => choice(
       $.typeIdFilter,
@@ -197,9 +197,9 @@ module.exports = grammar({
     ),
     typeIdFilter: $ => seq(
         /typeid/i,
-        $._ws,
+        ws($),
         $.booleanComparisonOperator,
-        $._ws,
+        ws($),
         choice(
           $.subExpressionConstraint,
           $.eclConceptReferenceSet,
@@ -207,9 +207,9 @@ module.exports = grammar({
     ),
     typeTokenFilter: $ => seq(
       /type/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.typeToken,
         $._typeTokenSet,
@@ -217,27 +217,27 @@ module.exports = grammar({
     ),
     typeToken: $ => choice($.synonym, $.fullySpecifiedName, $.definition),
     _typeTokenSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.typeToken,
       repeat(seq($._mws, $.typeToken)),
-      $._ws, ")"),
+      ws($), ")"),
 
     dialectFilter: $ => seq(
       choice($.dialectIdFilter, $.dialectAliasFilter),
-      optional(seq($._ws, $.acceptabilitySet))
+      optional(seq(ws($), $.acceptabilitySet))
     ),
     dialectIdFilter: $ => seq(
       /dialectid/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.subExpressionConstraint,
         $.dialectIdSet,
       ),
     ),
     dialectIdSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.eclConceptReference,
       optional(seq($._mws, $.acceptabilitySet)),
       repeat(seq(
@@ -245,12 +245,12 @@ module.exports = grammar({
         $.eclConceptReference,
         optional(seq($._mws, $.acceptabilitySet)),
       )),
-      $._ws, ")"),
+      ws($), ")"),
     dialectAliasFilter: $ => seq(
       /dialect/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.dialectAlias,
         $._dialectAliasSet,
@@ -258,7 +258,7 @@ module.exports = grammar({
     ),
     dialectAlias: _ => /[a-z][a-z\d\-]*/i,
     _dialectAliasSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.dialectAlias,
       optional(seq($._mws, $.acceptabilitySet)),
       repeat(seq(
@@ -266,26 +266,26 @@ module.exports = grammar({
         $.dialectAlias,
         optional(seq($._mws, $.acceptabilitySet)),
       )),
-      $._ws, ")"),
+      ws($), ")"),
     acceptabilitySet: $ => choice(
       $.acceptabilityConceptReferenceSet,
       $.acceptabilityTokenSet,
     ),
     acceptabilityConceptReferenceSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.eclConceptReference,
       repeat(seq(
         $._mws,
         $.eclConceptReference,
       )),
-      $._ws, ")"),
+      ws($), ")"),
     acceptabilityTokenSet: $ => choice($.preferred, $.acceptable),
 
     moduleFilter: $ => seq(
       /module/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.subExpressionConstraint,
         $.eclConceptReferenceSet,
@@ -294,9 +294,9 @@ module.exports = grammar({
 
     effectiveTimeFilter: $ => seq(
       /effectivetime/i,
-      $._ws,
+      ws($),
       $.timeComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.timeValue,
         $._timeValueSet,
@@ -304,34 +304,34 @@ module.exports = grammar({
     ),
     timeValue: $ => seq($._QM, optional(seq($.year, $.month, $.day)), $._QM,),
     _timeValueSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.timeValue,
       repeat(seq($._mws, $.timeValue)),
-      $._ws, ")"),
+      ws($), ")"),
 
     activeFilter: $ => seq(
       /active/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice($.activeTrueValue, $.activeFalseValue),
     ),
 
     descriptionIdFilter: $ => seq(
       /id/i,
-      $._ws,
+      ws($),
       $.idComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.sctId,
         $._sctIdSet,
       ),
     ),
     _sctIdSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.sctId,
       repeat(seq($._mws, $.sctId)),
-      $._ws, ")"),
+      ws($), ")"),
 
     _definitionStatusFilter: $ => choice(
       $.definitionStatusIdFilter,
@@ -339,9 +339,9 @@ module.exports = grammar({
     ),
     definitionStatusIdFilter: $ => seq(
       /definitionstatusid/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.subExpressionConstraint,
         $.eclConceptReferenceSet,
@@ -349,9 +349,9 @@ module.exports = grammar({
     ),
     definitionStatusTokenFilter: $ => seq(
       /definitionstatus/i,
-      $._ws,
+      ws($),
       $.booleanComparisonOperator,
-      $._ws,
+      ws($),
       choice(
         $.definitionStatusToken,
         $._definitionStatusTokenSet,
@@ -359,30 +359,27 @@ module.exports = grammar({
     ),
     definitionStatusToken: $ => choice($.primitiveToken, $.definedToken),
     _definitionStatusTokenSet: $ => seq(
-      "(", $._ws,
+      "(", ws($),
       $.definitionStatusToken,
       repeat(seq($._mws, $.definitionStatusToken)),
-      $._ws, ")"),
+      ws($), ")"),
 
-    // Field names
-    refsetFieldNameSet: $ => seq(
-      refsetfieldName,
+    _refsetFieldNameSet: $ => seq(
+      $.refsetFieldName,
       repeat(seq(
-        $._ws,
+        ws($),
         ",",
-        $.refsetfieldName,
+        $.refsetFieldName,
       ))
     ),
 
-    refsetfieldName: _ => /[a-z]+/i,
-
     // Concept reference (SCTID)
     _conceptNameInId: $ => seq(
-        $._ws,
+        ws($),
         "|",
-        $._ws,
+        ws($),
         $.term,
-        $._ws,
+        ws($),
         "|",
       ),
 
@@ -392,18 +389,18 @@ module.exports = grammar({
     ),
     eclConceptReferenceSet: $ => seq(
       "(",
-      $._ws,
+      ws($),
       $.eclConceptReference,
       repeat1(seq(
         $._mws,
         ",",
-        $._ws,
+        ws($),
         $.eclConceptReference,
       )),
-      $._ws,
+      ws($),
       ")",
     ),
-    _conceptId: _ => $.sctId,
+    _conceptId: $ => $.sctId,
     term: $ => seq(
       repeat1($._nonwsNonPipe),
       repeat(seq(
@@ -439,35 +436,35 @@ module.exports = grammar({
     // Refinement
     eclRefinement: $ => seq(
       $._subRefinement,
-      $._ws,
-      optionl(choice(
+      ws($),
+      optional(choice(
         $.conjunctionRefinementSet,
         $.disjunctionRefinementSet,
       )),
     ),
 
     conjunctionRefinementSet: $ => repeat1(seq(
-      $._ws,
-      $._conjunction,
-      $._ws,
+      ws($),
+      $.conjunction,
+      ws($),
       $._subRefinement,
     )),
     disjunctionRefinementSet: $ => repeat1(seq(
-      $._ws,
+      ws($),
       $.disjunction,
-      $._ws,
+      ws($),
       $._subRefinement,
     )),
 
     _subRefinement: $ => choice(
       $.eclAttributeSet,
       $.eclAttributeGroup,
-      seq("(", $._ws, $.eclRefinement, $._ws, ")"),
+      seq("(", ws($), $.eclRefinement, ws($), ")"),
     ),
 
     eclAttributeSet: $ => seq(
       $._subAttributeSet,
-      $._ws,
+      ws($),
       optional(choice(
         $.conjunctionAttributeSet,
         $.disjunctionAttributeSet,
@@ -475,47 +472,58 @@ module.exports = grammar({
     ),
 
     conjunctionAttributeSet: $ => repeat1(seq(
-      $._ws,
-      $._conjunction,
-      $._ws,
+      ws($),
+      $.conjunction,
+      ws($),
       $._subAttributeSet,
     )),
     disjunctionAttributeSet: $ => repeat1(seq(
-      $._ws,
+      ws($),
       $.disjunction,
-      $._ws,
+      ws($),
       $._subAttributeSet,
     )),
 
     _subAttributeSet: $ => choice(
       $.eclAttribute,
-      seq("(", $._ws, $.eclAttributeSet, $._ws, ")"),
+      seq("(", ws($), $.eclAttributeSet, ws($), ")"),
     ),
 
-    _eclAttributeGroup: $ => seq(
+    eclAttributeGroup: $ => seq(
       optional($._declaredCardinality),
-      "{", $._ws, eclAttributeSet, $._ws, "}",
+      "{", ws($), $.eclAttributeSet, ws($), "}",
     ),
 
     eclAttribute: $ => seq(
       optional($._declaredCardinality),
-      optional(seq($.reverseFlag, $._ws)),
-      $._eclAttributeName, $._ws,
+      optional(seq($.reverseFlag, ws($))),
+      $._eclAttributeName, ws($),
       choice(
-        seq($.expressionComparisonOperator, $._ws, $.subExpressionConstraint),
-        seq($.numericComparisonOperator, $._ws, "#", $.numericValue),
-        seq($.stringComparisonOperator, $._ws, choice(
+        seq($.expressionComparisonOperator, ws($), $.subExpressionConstraint),
+        seq($.numericComparisonOperator, ws($), "#", $.numericValue),
+        seq($.stringComparisonOperator, ws($), choice(
           $.typedSearchTerm,
           $._typedSearchTermSet,
         )),
-        seq($.booleanComparisonOperator, $._ws, $.booleanValue),
+        seq($.booleanComparisonOperator, ws($), $.booleanValue),
       )
     ),
 
     _eclAttributeName: $ => $.subExpressionConstraint,
 
+// TODO: Implement the following rules
+    // Member filter constraint
+    memberFilterConstraint: _ => /TODO/,
+
+    // History supplement
+    historySupplement: _ => /TODO/,
+
+    // Typed search term
+    typedSearchTerm: _ => /TODO/,
+    _typedSearchTermSet: _ => /TODO/,
+
     // Constraint operators
-    _constraintOperator: _ => choice(
+    _constraintOperator: $ => choice(
       $.childOf,
       $.childOrSelfOf,
       $.descendantOf,
@@ -544,8 +552,8 @@ module.exports = grammar({
     _SP: _ => ' ',
     _HTAB: _ => '\t',
     _QM: _ => '"',
-    CR: _ => '\r',
-    LF: _ => '\n',
+    _CR: _ => '\r',
+    _LF: _ => '\n',
     _BS: _ => '\\',
 
     reverseFlag: _ => 'R',
@@ -560,28 +568,41 @@ module.exports = grammar({
     activeFalseValue: _ => /false|0/,
     primitiveToken: _ => /primitive/i,
     definedToken: _ => /defined/i,
+    // TODO: These are placeholders:
+    _nonwsNonPipe: _ => /\w+/,
+    _anyNonEscapedChar: _ => /./,
 
     // Tokens
-    _declaredCardinality: $ => seq("[", $.cardinality, "]", $._ws),
+    sctId: _ => /[1-9]\d{5,17}/,
+    refsetFieldName: _ => /[a-z]+/i,
+    _declaredCardinality: $ => seq("[", $.cardinality, "]", ws($)),
     cardinality: $ => seq($.minValue, "..", $.maxValue),
-    minValue: $ => $._nonNegativeIntegerValue,
-    maxValue: $ => choice($._nonNegativeIntegerValue, $.many),
-    _nonNegativeIntegerValue: _ => /0|[1-9]\d*/,
+    minValue: $ => $.integerValue,
+    maxValue: $ => choice($.integerValue, $.many),
+    integerValue: _ => /0|[1-9]\d*/,
+    decimalValue: $ => seq($.integerValue, ".", /\d+/),
     year: _ => /[1-9]\d{3}/,
     month: _ => /0[1-9]|1[0-2]/,
     day: _ => /0[1-9]|[12]\d|3[01]/,
+    numericValue: $ => seq(
+      optional(/-|\+/),
+      choice($.integerValue, $.decimalValue),
+    ),
+    booleanValue: _ => /true|false/i,
 
     // Whitespaces
-    _ws: _ => repeat(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
-    _mws: _ => repeat1(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
+    _ws: $ => repeat(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
+    _mws: $ => repeat1(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
+    // TODO: placeholder for comments
+    comment: _ => seq("/* ", /.*/, " */"),
     
     // Set operators
-    _conjunction: _ => choice(
+    conjunction: $ => choice(
       seq(/and/i, $._mws),
       ','
     ),
-    disjunction: _ => seq(/or/i, $._mws),
-    exclusion: _ => seq(/minus/i, $._mws),
+    disjunction: $ => seq(/or/i, $._mws),
+    exclusion: $ => seq(/minus/i, $._mws),
 
     // Comparison operators
     expressionComparisonOperator: _ => /\!?=/,
@@ -592,3 +613,16 @@ module.exports = grammar({
     idComparisonOperator: _ => /\!?=/,
   }
 });
+
+
+// Function to make all whitespace optional
+function ws(rules) {
+  return optional(repeat(choice(
+    rules._SP,
+    rules._HTAB,
+    rules._CR,
+    rules._LF,
+    rules.comment,
+  )))
+}
+
