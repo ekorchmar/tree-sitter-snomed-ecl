@@ -59,12 +59,12 @@ module.exports = grammar({
       $.subExpressionConstraint,
       repeat1(seq(
         ws($),
-        $._dot,
+        ".",
         $._dottedExpressiontAttribute,
       ))
     ),
 
-    _dottedExpressiontAttribute: $ => seq($._dot, ws($), $._eclAttributeName),
+    _dottedExpressiontAttribute: $ => seq(".", ws($), $._eclAttributeName),
 
     subExpressionConstraint: $ => seq(
       optional(seq($._constraintOperator, ws($))),
@@ -302,7 +302,7 @@ module.exports = grammar({
         $._timeValueSet,
       ),
     ),
-    timeValue: $ => seq($._QM, optional(seq($.year, $.month, $.day)), $._QM,),
+    timeValue: $ => seq('"', optional(seq($.year, $.month, $.day)), '"',),
     _timeValueSet: $ => seq(
       "(", ws($),
       $.timeValue,
@@ -404,8 +404,7 @@ module.exports = grammar({
     term: $ => seq(
       repeat1($._nonwsNonPipe),
       repeat(seq(
-        repeat1($._SP),
-        repeat1($._nonwsNonPipe),
+        / +/, repeat1($._nonwsNonPipe),
       ))
     ),
 
@@ -414,11 +413,11 @@ module.exports = grammar({
       choice(
         // With or without quotes
         seq(
-          $._QM,
+          '"',
           $.altIdentifierSchemeAlias,
           "#",
           $.altIdentifierCodeWithinQuotes,
-          $._QM,
+          '"',
         ),
         seq(
           $.altIdentifierSchemeAlias,
@@ -548,14 +547,6 @@ module.exports = grammar({
     bottom: _ => "!!<",
 
     // Literals
-    _dot: _ => '.',
-    _SP: _ => ' ',
-    _HTAB: _ => '\t',
-    _QM: _ => '"',
-    _CR: _ => '\r',
-    _LF: _ => '\n',
-    _BS: _ => '\\',
-
     reverseFlag: _ => 'R',
     wildCard: _ => '*',
     many: _ => '*',
@@ -591,8 +582,7 @@ module.exports = grammar({
     booleanValue: _ => /true|false/i,
 
     // Whitespaces
-    _ws: $ => repeat(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
-    _mws: $ => repeat1(choice($._SP, $._HTAB, $._CR, $._LF, $.comment)),
+    _mws: $ => repeat1(choice(/ \t\r\n/, $.comment)),
     // TODO: placeholder for comments
     comment: _ => seq("/* ", /.*/, " */"),
     
@@ -618,11 +608,7 @@ module.exports = grammar({
 // Function to make all whitespace optional
 function ws(rules) {
   return optional(repeat(choice(
-    rules._SP,
-    rules._HTAB,
-    rules._CR,
-    rules._LF,
-    rules.comment,
+    / \t\r\n/, rules.comment,
   )))
 }
 
