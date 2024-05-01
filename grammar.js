@@ -31,7 +31,7 @@ module.exports = grammar({
       $.subExpressionConstraint,
       repeat1(seq(
         $._ws,
-        $.conjunction,
+        $._conjunction,
         $._ws,
         $.subExpressionConstraint,
       ))
@@ -64,36 +64,7 @@ module.exports = grammar({
       ))
     ),
 
-    _dottedExpressiontAttribute: $ => seq($._dot, $._ws, $.eclAttributeName),
-
-  /* ABNF excerpt:
-
-subExpressionConstraint =
-  [constraintOperator ws]
-  (
-    (
-      [memberOf ws]
-      (
-        eclFocusConcept /
-        "(" ws expressionConstraint ws ")"
-      )
-      *(ws memberFilterConstraint)
-    ) /
-    (
-      eclFocusConcept /
-      "(" ws expressionConstraint ws ")"
-    )
-  )
-  *(
-    ws
-    (
-      descriptionFilterConstraint /
-      conceptFilterConstraint
-    )
-  )
-  [ws historySupplement]
-
-*/
+    _dottedExpressiontAttribute: $ => seq($._dot, $._ws, $._eclAttributeName),
 
     subExpressionConstraint: $ => seq(
       optional(seq($._constraintOperator, $._ws)),
@@ -123,7 +94,7 @@ subExpressionConstraint =
 
     _eclFocusConcept: $ => choice(
       $.eclConceptReference,
-      $._wildCard,
+      $.wildCard,
       $.altIdentifier,
     ),
 
@@ -135,12 +106,98 @@ subExpressionConstraint =
         $._ws,
         choice(
           $.refsetFieldNameSet,
-          $._wildCard,
+          $.wildCard,
         ),
         $._ws,
         "]",
       )),
     ),
+
+    // Description filter constraint
+    descriptionFilterConstraint: $ => seq(
+      "{{",
+      $._ws,
+      /d/i,
+      $._ws,
+      $._descriptionFilter,
+      repeat(seq(
+        $._ws,
+        ",",
+        $._descriptionFilter,
+      )),
+      $._ws,
+      "}}",
+    ),
+    _descriptionFilter: $ => choice(
+      $.termFilter,
+      $.languageFilter,
+      $.typeFilter,
+      $.dialectFilter,
+      $.moduleFilter,
+      $.effectiveTimeFilter,
+      $.activeFilter,
+      $.descriptionIdFilter,
+    ),
+
+    termFilter: $ => seq(
+      /term/i,
+      $._ws,
+      $.stringComparisonOperator,
+      $._ws,
+      choice(
+        $.typedSearchTerm,
+        $._typedSearchTermSet,
+      ),
+    ),
+
+    languageFilter: $ => seq(
+      /language/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.languageCode,
+        $._languageCodeSet,
+      ),
+    ),
+
+    languageCode: $ => seq($._alpha, $._alpha),
+    _languageCodeSet: $ => seq(
+      "(", $._ws,
+      $.languageCode,
+      repeat(seq($._mws, $.languageCode)),
+      $._ws, ")"),
+
+    typeFilter: $ => choice(
+      $.typeIdFilter,
+      $.typeTokenFilter,
+    ),
+    typeIdFilter: $ => seq(
+        /typeid/i,
+        $._ws,
+        $.booleanComparisonOperator,
+        $._ws,
+        choice(
+          $.subExpressionConstraint,
+          $.eclConceptReferenceSet,
+        ),
+    ),
+    typeTokenFilter: $ => seq(
+      /type/i,
+      $._ws,
+      $.booleanComparisonOperator,
+      $._ws,
+      choice(
+        $.typeToken,
+        $._typeTokenSet,
+      ),
+    ),
+    typeToken: $ => choice($.synonym, $.fullySpecifiedName, $.definition),
+    _typeTokenSet: $ => seq(
+      "(", $._ws,
+      $.typeToken,
+      repeat(seq($._mws, $.typeToken)),
+      $._ws, ")"),
 
     // Field names
     refsetFieldNameSet: $ => seq(
@@ -228,14 +285,140 @@ subExpressionConstraint =
       "_",
     )),
 
+    // Refinement
+    eclRefinement: $ => seq(
+      $._subRefinement,
+      $._ws,
+      optionl(choice(
+        $.conjunctionRefinementSet,
+        $.disjunctionRefinementSet,
+      )),
+    ),
+
+    conjunctionRefinementSet: $ => repeat1(seq(
+      $._ws,
+      $._conjunction,
+      $._ws,
+      $._subRefinement,
+    )),
+    disjunctionRefinementSet: $ => repeat1(seq(
+      $._ws,
+      $.disjunction,
+      $._ws,
+      $._subRefinement,
+    )),
+
+    _subRefinement: $ => choice(
+      $.eclAttributeSet,
+      $.eclAttributeGroup,
+      seq("(", $._ws, $.eclRefinement, $._ws, ")"),
+    ),
+
+    eclAttributeSet: $ => seq(
+      $._subAttributeSet,
+      $._ws,
+      optional(choice(
+        $.conjunctionAttributeSet,
+        $.disjunctionAttributeSet,
+      )),
+    ),
+
+    conjunctionAttributeSet: $ => repeat1(seq(
+      $._ws,
+      $._conjunction,
+      $._ws,
+      $._subAttributeSet,
+    )),
+    disjunctionAttributeSet: $ => repeat1(seq(
+      $._ws,
+      $.disjunction,
+      $._ws,
+      $._subAttributeSet,
+    )),
+
+    _subAttributeSet: $ => choice(
+      $.eclAttribute,
+      seq("(", $._ws, $.eclAttributeSet, $._ws, ")"),
+    ),
+
+    _eclAttributeGroup: $ => seq(
+      optional($._declaredCardinality),
+      "{", $._ws, eclAttributeSet, $._ws, "}",
+    ),
+
+    eclAttribute: $ => seq(
+      optional($._declaredCardinality),
+      optional(seq($.reverseFlag, $._ws)),
+      $._eclAttributeName, $._ws,
+      choice(
+        seq($.expressionComparisonOperator, $._ws, $.subExpressionConstraint),
+        seq($.numericComparisonOperator, $._ws, "#", $.numericValue),
+        seq($.stringComparisonOperator, $._ws, choice(
+          $.typedSearchTerm,
+          $._typedSearchTermSet,
+        )),
+        seq($.booleanComparisonOperator, $._ws, $.booleanValue),
+      )
+    ),
+
+    _eclAttributeName: $ => $.subExpressionConstraint,
+
+    // Constraint operators
+    _constraintOperator: _ => choice(
+      $.childOf,
+      $.childOrSelfOf,
+      $.descendantOf,
+      $.descendantOrSelfOf,
+      $.parentOf,
+      $.parentOrSelfOf,
+      $.ancestorOf,
+      $.ancestorOrSelfOf,
+      $.top,
+      $.bottom,
+    ),
+
+    descendantOf: _ => "<",
+    descendantOrSelfOf: _ => "<<",
+    childOf: _ => "<!",
+    childOrSelfOf: _ => "<<!",
+    ancestorOf: _ => ">",
+    ancestorOrSelfOf: _ => ">>",
+    parentOf: _ => ">!",
+    parentOrSelfOf: _ => ">>!",
+    top: _ => "!!>",
+    bottom: _ => "!!<",
+
     // Literals
     _dot: _ => '.',
-    _wildCard: _ => '*',
     _SP: _ => ' ',
+    reverseFlag: _ => 'R',
+    wildCard: _ => '*',
+    many: _ => '*',
+    definition: _ => /def/i,
+    fullySpecifiedName: _ => /fsn/i,
+    synonym: _ => /syn/i,
 
     // Tokens
-    _alpha: _ => /[a-zA-Z]/,
+    _alpha: _ => /[a-z]/i,
+    _declaredCardinality: $ => seq("[", $.cardinality, "]", $._ws),
+    cardinality: $ => seq($.minValue, "..", $.maxValue),
+    minValue: $ => $._nonNegativeIntegerValue,
+    maxValue: $ => choice($._nonNegativeIntegerValue, $.many),
     
+    // Set operators
+    _conjunction: _ => choice(
+      seq(/and/i, $._mws),
+      ','
+    ),
+    disjunction: _ => seq(/or/i, $._mws),
+    exclusion: _ => seq(/minus/i, $._mws),
 
+    // Comparison operators
+    expressionComparisonOperator: _ => /\!?=/,
+    numericComparisonOperator: _ => choice(/\!?=/, /<=?/, />=?/),
+    timeComparisonOperator: _ => choice(/\!?=/, /<=?/, />=?/),
+    stringComparisonOperator: _ => /\!?=/,
+    booleanComparisonOperator: _ => /\!?=/,
+    idComparisonOperator: _ => /\!?=/,
   }
 });
