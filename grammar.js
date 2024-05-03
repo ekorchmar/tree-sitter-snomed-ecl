@@ -373,6 +373,24 @@ module.exports = grammar({
       ))
     ),
 
+    memberFieldFilter: $ => seq(
+      $.refsetFieldName,
+      ws($),
+      choice(
+        seq($.expressionComparisonOperator, ws($), $.subExpressionConstraint),
+        seq($.numericComparisonOperator, ws($), "#", $.numericValue),
+        seq($.stringComparisonOperator, ws($), choice(
+          $.typedSearchTerm,
+          $._typedSearchTermSet,
+        )),
+        seq($.booleanComparisonOperator, ws($), $.booleanValue),
+        seq($.timeComparisonOperator, ws($), choice(
+          $.timeValue,
+          $._timeValueSet,
+        )),
+      )
+    ),
+
     // Concept reference (SCTID)
     _conceptNameInId: $ => seq(
         ws($),
@@ -510,16 +528,81 @@ module.exports = grammar({
 
     _eclAttributeName: $ => $.subExpressionConstraint,
 
-// TODO: Implement the following rules
     // Member filter constraint
-    memberFilterConstraint: _ => /TODO/,
+    memberFilterConstraint: $ => seq(
+      "{{",
+      ws($),
+      /m/i,
+      ws($),
+      $._memberFilter,
+      repeat(seq(
+        ws($),
+        ",",
+        $._memberFilter,
+      )),
+      ws($),
+      "}}",
+    ),
+    _memberFilter: $ => choice(
+      $.moduleFilter,
+      $.effectiveTimeFilter,
+      $.activeFilter,
+      $.memberFieldFilter,
+    ),
 
     // History supplement
-    historySupplement: _ => /TODO/,
+    historySupplement: $ => seq(
+      "{{",
+      ws($),
+      "+",
+      ws($),
+      /history/i,
+      optional(choice(
+        $.historyProfileSuffix,
+        seq(ws($), $.historySubset),
+      )),
+      ws($),
+      "}}",
+    ),
+    historyProfileSuffix: $ => choice(
+      $.historyMinimumSuffix,
+      $.historyModerateSuffix,
+      $.historyMaximumSuffix,
+    ),
+    historySubset: $ => seq(
+      "(",
+      ws($),
+      $.expressionConstraint,
+      ws($),
+      ")",
+    ),
 
     // Typed search term
-    typedSearchTerm: _ => /TODO/,
-    _typedSearchTermSet: _ => /TODO/,
+    typedSearchTerm: $ => choice(
+      seq(
+        optional(seq(/match/i, ws($), ":", ws($))),
+        $._matchSearchTermSet,
+      ),
+      seq(/wild/i, ws($), ":", ws($), '"', $.wildSearchTerm, '"'),
+    ),
+    _typedSearchTermSet: $ => seq(
+      "(", ws($),
+      $.typedSearchTerm,
+      repeat(seq($._mws, $.typedSearchTerm)),
+      ws($), ")"),
+    matchSearchTerm: $ => repeat1(seq(
+      $._nonwsNonEscapedChar,
+      $._escapedChar,
+    )),
+    _matchSearchTermSet: $ => seq(
+      "", ws($),
+      $.matchSearchTerm,
+      repeat(seq($._mws, $.matchSearchTerm)),
+      ws($), ""),
+    wildSearchTerm: $ => repeat1(choice(
+      $._anyNonEscapedChar,
+      $._escapedWildChar,
+    )),
 
     // Constraint operators
     _constraintOperator: $ => choice(
@@ -559,9 +642,34 @@ module.exports = grammar({
     activeFalseValue: _ => /false|0/,
     primitiveToken: _ => /primitive/i,
     definedToken: _ => /defined/i,
-    // TODO: These are placeholders:
-    _nonwsNonPipe: _ => /\w+/,
-    _anyNonEscapedChar: _ => /./,
+    booleanValue: _ => /true|false/i,
+    _escapedWildChar: _ => /\\["\\\*]/,
+    _escapedChar: _ => /\\[\\\"]/,
+    /* NB: ABNF source gives definition for the most primitive tokens
+     * in literal byte content, abstracting below both UTF-8 and ASCII.
+     * This is not how Tree-sitter works, because here we can not go
+     * lower than UTF-8.
+     * As such, tokens will be defined semantically, not byte-wise;
+     * I do not foresee breaking incompatibility with existing
+     * ABNF-reliant implementations; should it appear, I will have to
+     * literally define these rules in src/parce.c
+    */
+    _nonStarChar: _ => /[^\*]/,
+    _starWithNonFSlash: _ => /\*[^\/]/, // Any star not followed by '/'
+    _nonwsNonPipe: _ => /[^\|\u0000- ]/, // Anything above 0x20, except '|'
+    _anyNonEscapedChar: _ => choice(
+      // 'Normal' whitespaces
+      /[\t\n\r ]/,
+      // Anything between 0x21 and 0x7E
+      /[\u0021-\u007E]/,
+      // Anything above 0x30
+      /[\u0080-\uFFFF]/,
+    ),
+    _nonwsNonEscapedChar: _ => choice(
+      "\u0021",
+      /[\u0023-\u005B]/,
+      /[\u005D-\uFFFF]/,
+    ),
 
     // Tokens
     sctId: _ => /[1-9]\d{5,17}/,
@@ -579,12 +687,17 @@ module.exports = grammar({
       optional(/-|\+/),
       choice($.integerValue, $.decimalValue),
     ),
-    booleanValue: _ => /true|false/i,
+    historyMinimumSuffix: _ => /[\-_]min/i,
+    historyModerateSuffix: _ => /[\-_]mod/i,
+    historyMaximumSuffix: _ => /[\-_]max/i,
 
     // Whitespaces
     _mws: $ => repeat1(choice(/ \t\r\n/, $.comment)),
-    // TODO: placeholder for comments
-    comment: _ => seq("/* ", /.*/, " */"),
+    comment: $ => seq(
+      "/*",
+      repeat(choice($._nonStarChar, $._starWithNonFSlash)),
+      "*/"
+    ),
     
     // Set operators
     conjunction: $ => choice(
