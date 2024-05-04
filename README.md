@@ -7,8 +7,8 @@ Targets current version: 3.2, defined in ABNF form on the corresponding [SNOMED 
 Note that only Brief (Normative) version of the syntax is supported.
 
 ## See also
-* Officially provided grammar implementation on ANTLR4 library on the [IHSDO GitHub](https://github.com/IHTSDO/snomed-expression-constraint-language/tree/main)
-* [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) parser generator
+* Officially provided grammar implementation on ANTLR4 library on the [IHSDO GitHub](https://github.com/IHTSDO/snomed-ecl-parser);
+* [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) parser generator.
 
 ## References
 * [SNOMED ECL](snomed.org/ecl)
