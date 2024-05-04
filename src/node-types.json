@@ -1,0 +1,1771 @@
+[
+  {
+    "type": "acceptabilityConceptReferenceSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "acceptabilitySet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "acceptabilityConceptReferenceSet",
+          "named": true
+        },
+        {
+          "type": "acceptabilityTokenSet",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "acceptabilityTokenSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "acceptable",
+          "named": true
+        },
+        {
+          "type": "preferred",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "activeFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activeFalseValue",
+          "named": true
+        },
+        {
+          "type": "activeTrueValue",
+          "named": true
+        },
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "altIdentifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "altIdentifierCodeWithinQuotes",
+          "named": true
+        },
+        {
+          "type": "altIdentifierCodeWithoutQuotes",
+          "named": true
+        },
+        {
+          "type": "altIdentifierSchemeAlias",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "altIdentifierCodeWithinQuotes",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "booleanComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "cardinality",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "maxValue",
+          "named": true
+        },
+        {
+          "type": "minValue",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "conceptFilterConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activeFilter",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "definitionStatusIdFilter",
+          "named": true
+        },
+        {
+          "type": "definitionStatusTokenFilter",
+          "named": true
+        },
+        {
+          "type": "effectiveTimeFilter",
+          "named": true
+        },
+        {
+          "type": "moduleFilter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conjunction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conjunctionAttributeSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunction",
+          "named": true
+        },
+        {
+          "type": "eclAttribute",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conjunctionExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunction",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conjunctionRefinementSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunction",
+          "named": true
+        },
+        {
+          "type": "eclAttributeGroup",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        },
+        {
+          "type": "eclRefinement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "decimalValue",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "integerValue",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "definitionStatusIdFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReferenceSet",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "definitionStatusToken",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "definedToken",
+          "named": true
+        },
+        {
+          "type": "primitiveToken",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "definitionStatusTokenFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "definitionStatusToken",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "descriptionFilterConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activeFilter",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "descriptionIdFilter",
+          "named": true
+        },
+        {
+          "type": "dialectFilter",
+          "named": true
+        },
+        {
+          "type": "effectiveTimeFilter",
+          "named": true
+        },
+        {
+          "type": "languageFilter",
+          "named": true
+        },
+        {
+          "type": "moduleFilter",
+          "named": true
+        },
+        {
+          "type": "termFilter",
+          "named": true
+        },
+        {
+          "type": "typeFilter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "descriptionIdFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "idComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "sctId",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dialectAliasFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "acceptabilitySet",
+          "named": true
+        },
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "dialectAlias",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dialectFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "acceptabilitySet",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "dialectAliasFilter",
+          "named": true
+        },
+        {
+          "type": "dialectIdFilter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dialectIdFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "dialectIdSet",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dialectIdSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "acceptabilitySet",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "disjunction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "disjunctionAttributeSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "disjunction",
+          "named": true
+        },
+        {
+          "type": "eclAttribute",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "disjunctionExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "disjunction",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "disjunctionRefinementSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "disjunction",
+          "named": true
+        },
+        {
+          "type": "eclAttributeGroup",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        },
+        {
+          "type": "eclRefinement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dottedExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclAttribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "booleanValue",
+          "named": true
+        },
+        {
+          "type": "cardinality",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "expressionComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "numericComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "numericValue",
+          "named": true
+        },
+        {
+          "type": "reverseFlag",
+          "named": true
+        },
+        {
+          "type": "stringComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "typedSearchTerm",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclAttributeGroup",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cardinality",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclAttributeSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunctionAttributeSet",
+          "named": true
+        },
+        {
+          "type": "disjunctionAttributeSet",
+          "named": true
+        },
+        {
+          "type": "eclAttribute",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclConceptReference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "sctId",
+          "named": true
+        },
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclConceptReferenceSet",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eclRefinement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunctionRefinementSet",
+          "named": true
+        },
+        {
+          "type": "disjunctionRefinementSet",
+          "named": true
+        },
+        {
+          "type": "eclAttributeGroup",
+          "named": true
+        },
+        {
+          "type": "eclAttributeSet",
+          "named": true
+        },
+        {
+          "type": "eclRefinement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "effectiveTimeFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "timeComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "timeValue",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exclusion",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exclusionExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "exclusion",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expressionComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "expressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conjunctionExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "disjunctionExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "dottedExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "exclusionExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "refinedExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "historyProfileSuffix",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "historyMaximumSuffix",
+          "named": true
+        },
+        {
+          "type": "historyMinimumSuffix",
+          "named": true
+        },
+        {
+          "type": "historyModerateSuffix",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "historySubset",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "expressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "historySupplement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "historyProfileSuffix",
+          "named": true
+        },
+        {
+          "type": "historySubset",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "idComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "languageFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "languageCode",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "many",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "matchSearchTerm",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "maxValue",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "integerValue",
+          "named": true
+        },
+        {
+          "type": "many",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "memberFieldFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "booleanValue",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "expressionComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "numericComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "numericValue",
+          "named": true
+        },
+        {
+          "type": "refsetFieldName",
+          "named": true
+        },
+        {
+          "type": "stringComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        },
+        {
+          "type": "timeComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "timeValue",
+          "named": true
+        },
+        {
+          "type": "typedSearchTerm",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "memberFilterConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activeFilter",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "effectiveTimeFilter",
+          "named": true
+        },
+        {
+          "type": "memberFieldFilter",
+          "named": true
+        },
+        {
+          "type": "moduleFilter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "memberOf",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "refsetFieldName",
+          "named": true
+        },
+        {
+          "type": "wildCard",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "minValue",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "integerValue",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "moduleFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReferenceSet",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "numericComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "numericValue",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "decimalValue",
+          "named": true
+        },
+        {
+          "type": "integerValue",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "refinedExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclRefinement",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "stringComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "subExpressionConstraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "altIdentifier",
+          "named": true
+        },
+        {
+          "type": "ancestorOf",
+          "named": true
+        },
+        {
+          "type": "ancestorOrSelfOf",
+          "named": true
+        },
+        {
+          "type": "bottom",
+          "named": true
+        },
+        {
+          "type": "childOf",
+          "named": true
+        },
+        {
+          "type": "childOrSelfOf",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "conceptFilterConstraint",
+          "named": true
+        },
+        {
+          "type": "descendantOf",
+          "named": true
+        },
+        {
+          "type": "descendantOrSelfOf",
+          "named": true
+        },
+        {
+          "type": "descriptionFilterConstraint",
+          "named": true
+        },
+        {
+          "type": "eclConceptReference",
+          "named": true
+        },
+        {
+          "type": "expressionConstraint",
+          "named": true
+        },
+        {
+          "type": "historySupplement",
+          "named": true
+        },
+        {
+          "type": "memberFilterConstraint",
+          "named": true
+        },
+        {
+          "type": "memberOf",
+          "named": true
+        },
+        {
+          "type": "parentOf",
+          "named": true
+        },
+        {
+          "type": "parentOrSelfOf",
+          "named": true
+        },
+        {
+          "type": "top",
+          "named": true
+        },
+        {
+          "type": "wildCard",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "term",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "termFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "stringComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "typedSearchTerm",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "timeComparisonOperator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "timeValue",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "day",
+          "named": true
+        },
+        {
+          "type": "month",
+          "named": true
+        },
+        {
+          "type": "year",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typeFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "typeIdFilter",
+          "named": true
+        },
+        {
+          "type": "typeTokenFilter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typeIdFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "eclConceptReferenceSet",
+          "named": true
+        },
+        {
+          "type": "subExpressionConstraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typeToken",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "definition",
+          "named": true
+        },
+        {
+          "type": "fullySpecifiedName",
+          "named": true
+        },
+        {
+          "type": "synonym",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typeTokenFilter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "booleanComparisonOperator",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "typeToken",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typedSearchTerm",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "matchSearchTerm",
+          "named": true
+        },
+        {
+          "type": "wildSearchTerm",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "wildCard",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "wildSearchTerm",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "",
+    "named": false
+  },
+  {
+    "type": "!",
+    "named": false
+  },
+  {
+    "type": "\"",
+    "named": false
+  },
+  {
+    "type": "#",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": "*/",
+    "named": false
+  },
+  {
+    "type": "+",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "..",
+    "named": false
+  },
+  {
+    "type": "/*",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "^",
+    "named": false
+  },
+  {
+    "type": "acceptable",
+    "named": true
+  },
+  {
+    "type": "activeFalseValue",
+    "named": true
+  },
+  {
+    "type": "activeTrueValue",
+    "named": true
+  },
+  {
+    "type": "altIdentifierCodeWithoutQuotes",
+    "named": true
+  },
+  {
+    "type": "altIdentifierSchemeAlias",
+    "named": true
+  },
+  {
+    "type": "ancestorOf",
+    "named": true
+  },
+  {
+    "type": "ancestorOrSelfOf",
+    "named": true
+  },
+  {
+    "type": "booleanValue",
+    "named": true
+  },
+  {
+    "type": "bottom",
+    "named": true
+  },
+  {
+    "type": "childOf",
+    "named": true
+  },
+  {
+    "type": "childOrSelfOf",
+    "named": true
+  },
+  {
+    "type": "day",
+    "named": true
+  },
+  {
+    "type": "definedToken",
+    "named": true
+  },
+  {
+    "type": "definition",
+    "named": true
+  },
+  {
+    "type": "descendantOf",
+    "named": true
+  },
+  {
+    "type": "descendantOrSelfOf",
+    "named": true
+  },
+  {
+    "type": "dialectAlias",
+    "named": true
+  },
+  {
+    "type": "fullySpecifiedName",
+    "named": true
+  },
+  {
+    "type": "historyMaximumSuffix",
+    "named": true
+  },
+  {
+    "type": "historyMinimumSuffix",
+    "named": true
+  },
+  {
+    "type": "historyModerateSuffix",
+    "named": true
+  },
+  {
+    "type": "integerValue",
+    "named": true
+  },
+  {
+    "type": "languageCode",
+    "named": true
+  },
+  {
+    "type": "month",
+    "named": true
+  },
+  {
+    "type": "parentOf",
+    "named": true
+  },
+  {
+    "type": "parentOrSelfOf",
+    "named": true
+  },
+  {
+    "type": "preferred",
+    "named": true
+  },
+  {
+    "type": "primitiveToken",
+    "named": true
+  },
+  {
+    "type": "refsetFieldName",
+    "named": true
+  },
+  {
+    "type": "reverseFlag",
+    "named": true
+  },
+  {
+    "type": "sctId",
+    "named": true
+  },
+  {
+    "type": "synonym",
+    "named": true
+  },
+  {
+    "type": "top",
+    "named": true
+  },
+  {
+    "type": "year",
+    "named": true
+  },
+  {
+    "type": "{",
+    "named": false
+  },
+  {
+    "type": "{{",
+    "named": false
+  },
+  {
+    "type": "|",
+    "named": false
+  },
+  {
+    "type": "}",
+    "named": false
+  },
+  {
+    "type": "}}",
+    "named": false
+  }
+]
