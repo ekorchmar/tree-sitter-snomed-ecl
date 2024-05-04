@@ -1,9 +1,35 @@
 module.exports = grammar({
   name: 'snomed_ecl',
 
+  extras: _ => [], // Whitespaces are handled by ws($) function
+  conflicts: $ => [
+    [$.expressionConstraint], // May contain itself any number of times
+
+    // Dialects are broken in a way I do not yet understand
+    [$._refsetFieldNameSet],
+    [$._typedSearchTermSet],
+    [$._matchSearchTermSet],
+    [$._timeValueSet],
+    [$._definitionStatusTokenSet],
+    [$._languageCodeSet],
+    [$._typeTokenSet],
+    [$.dialectIdSet],
+    [$._dialectAliasSet],
+    [$.acceptabilityConceptReferenceSet],
+    [$.eclConceptReferenceSet],
+
+    [$.altIdentifier],        // Extremely ambiguously defined in source
+    [$._subRefinement, $._subAttributeSet], // Ambiguity in refinement
+    [$.dialectFilter], // ABNF has optional right-hand side, which may be a bug
+    [$.conjunctionRefinementSet], // Ambiguity in refinement
+    [$.disjunctionRefinementSet], // Ambiguity in refinement
+    [$.conjunctionAttributeSet], // Ambiguity in refinement
+    [$.disjunctionAttributeSet], // Ambiguity in refinement
+  ],
+
   rules: {
     // The Entry point: expression Constraint:
-    expressionConstraint: $ => seq(
+    expressionConstraint: $ => prec.left(seq(
       ws($),
       choice(
         $.refinedExpressionConstraint,
@@ -11,15 +37,15 @@ module.exports = grammar({
         $.dottedExpressionConstraint,
         $.subExpressionConstraint),
       ws($),
-    ),
+    )),
 
     // Different types of Expression Constraints:
-    refinedExpressionConstraint: $ => seq(
+    refinedExpressionConstraint: $ => prec.left(seq(
       $.subExpressionConstraint,
       ws($),
       ':',
       $.eclRefinement,
-    ),
+    )),
 
     _compoundExpressionConstraint: $ => choice(
       $.conjunctionExpressionConstraint,
@@ -27,7 +53,7 @@ module.exports = grammar({
       $.exclusionExpressionConstraint,
     ),
 
-    conjunctionExpressionConstraint: $ => seq(
+    conjunctionExpressionConstraint: $ => prec.left(seq(
       $.subExpressionConstraint,
       repeat1(seq(
         ws($),
@@ -35,9 +61,9 @@ module.exports = grammar({
         ws($),
         $.subExpressionConstraint,
       ))
-    ),
+    )),
 
-    disjunctionExpressionConstraint: $ => seq(
+    disjunctionExpressionConstraint: $ => prec.left(seq(
       $.subExpressionConstraint,
       repeat1(seq(
         ws($),
@@ -45,7 +71,7 @@ module.exports = grammar({
         ws($),
         $.subExpressionConstraint,
       ))
-    ),
+    )),
 
     exclusionExpressionConstraint: $ => seq(
       $.subExpressionConstraint,
@@ -55,18 +81,18 @@ module.exports = grammar({
       $.subExpressionConstraint,
     ),
 
-    dottedExpressionConstraint: $ => seq(
+    dottedExpressionConstraint: $ => prec.left(seq(
       $.subExpressionConstraint,
       repeat1(seq(
         ws($),
         ".",
         $._dottedExpressiontAttribute,
       ))
-    ),
+    )),
 
     _dottedExpressiontAttribute: $ => seq(".", ws($), $._eclAttributeName),
 
-    subExpressionConstraint: $ => seq(
+    subExpressionConstraint: $ => prec.left(seq(
       optional(seq($._constraintOperator, ws($))),
       choice(
         seq(
@@ -90,28 +116,26 @@ module.exports = grammar({
         )
       )),
       optional(seq(ws($), $.historySupplement)),
-    ),
+    )),
 
-    _eclFocusConcept: $ => choice(
+    _eclFocusConcept: $ => prec.left(choice(
       $.eclConceptReference,
       $.wildCard,
       $.altIdentifier,
-    ),
+    )),
 
-    memberOf: $ => seq(
+    memberOf: $ => prec.left(seq(
       "^",
       optional(seq(
         ws($),
-        "[",
-        ws($),
+        "[", ws($),
         choice(
           $._refsetFieldNameSet,
           $.wildCard,
         ),
-        ws($),
-        "]",
+        ws($), "]",
       )),
-    ),
+    )),
 
     // Concept filter constraint
     conceptFilterConstraint: $ => seq(
@@ -401,10 +425,10 @@ module.exports = grammar({
         "|",
       ),
 
-    eclConceptReference: $ => seq(
+    eclConceptReference: $ => prec.left(seq(
       $._conceptId,
       optional($._conceptNameInId),
-    ),
+    )),
     eclConceptReferenceSet: $ => seq(
       "(",
       ws($),
@@ -451,27 +475,27 @@ module.exports = grammar({
     altIdentifierCodeWithoutQuotes: _ => /[\w\-\.]+/i,
 
     // Refinement
-    eclRefinement: $ => seq(
+    eclRefinement: $ => prec.left(seq(
       $._subRefinement,
       ws($),
       optional(choice(
         $.conjunctionRefinementSet,
         $.disjunctionRefinementSet,
       )),
-    ),
+    )),
 
-    conjunctionRefinementSet: $ => repeat1(seq(
+    conjunctionRefinementSet: $ => prec.left(repeat1(seq(
       ws($),
       $.conjunction,
       ws($),
       $._subRefinement,
-    )),
-    disjunctionRefinementSet: $ => repeat1(seq(
+    ))),
+    disjunctionRefinementSet: $ => prec.left(repeat1(seq(
       ws($),
       $.disjunction,
       ws($),
       $._subRefinement,
-    )),
+    ))),
 
     _subRefinement: $ => choice(
       $.eclAttributeSet,
@@ -479,27 +503,27 @@ module.exports = grammar({
       seq("(", ws($), $.eclRefinement, ws($), ")"),
     ),
 
-    eclAttributeSet: $ => seq(
+    eclAttributeSet: $ => prec.left(seq(
       $._subAttributeSet,
       ws($),
       optional(choice(
         $.conjunctionAttributeSet,
         $.disjunctionAttributeSet,
       )),
-    ),
+    )),
 
-    conjunctionAttributeSet: $ => repeat1(seq(
+    conjunctionAttributeSet: $ => prec.left(repeat1(seq(
       ws($),
       $.conjunction,
       ws($),
       $._subAttributeSet,
-    )),
-    disjunctionAttributeSet: $ => repeat1(seq(
+    ))),
+    disjunctionAttributeSet: $ => prec.left(repeat1(seq(
       ws($),
       $.disjunction,
       ws($),
       $._subAttributeSet,
-    )),
+    ))),
 
     _subAttributeSet: $ => choice(
       $.eclAttribute,
@@ -526,7 +550,7 @@ module.exports = grammar({
       )
     ),
 
-    _eclAttributeName: $ => $.subExpressionConstraint,
+    _eclAttributeName: $ => prec(2, $.subExpressionConstraint),
 
     // Member filter constraint
     memberFilterConstraint: $ => seq(
@@ -700,16 +724,16 @@ module.exports = grammar({
     ),
     
     // Set operators
-    conjunction: $ => choice(
+    conjunction: $ => prec.left(choice(
       seq(/and/i, $._mws),
       ','
-    ),
-    disjunction: $ => seq(/or/i, $._mws),
-    exclusion: $ => seq(/minus/i, $._mws),
+    )),
+    disjunction: $ => prec.left(seq(/or/i, $._mws)),
+    exclusion: $ => prec.left(seq(/minus/i, $._mws)),
 
     // Comparison operators
-    expressionComparisonOperator: _ => /\!?=/,
-    numericComparisonOperator: _ => choice(/\!?=/, /<=?/, />=?/),
+    expressionComparisonOperator: _ => prec(3, /\!?=/),
+    numericComparisonOperator: _ => prec(2, choice(/\!?=/, /<=?/, />=?/)),
     timeComparisonOperator: _ => choice(/\!?=/, /<=?/, />=?/),
     stringComparisonOperator: _ => /\!?=/,
     booleanComparisonOperator: _ => /\!?=/,
@@ -719,6 +743,7 @@ module.exports = grammar({
 
 
 // Function to make all whitespace optional
+// We use this instead of extras field to reflect the grammar definitions
 function ws(rules) {
   return optional(repeat(choice(
     / \t\r\n/, rules.comment,
