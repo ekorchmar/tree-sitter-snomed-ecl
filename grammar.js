@@ -20,7 +20,6 @@ module.exports = grammar({
 
     [$.altIdentifier],        // Extremely ambiguously defined in source
     [$._subRefinement, $._subAttributeSet], // Ambiguity in refinement
-    [$.dialectFilter], // ABNF has optional right-hand side, which may be a bug
     [$.conjunctionRefinementSet], // Ambiguity in refinement
     [$.disjunctionRefinementSet], // Ambiguity in refinement
     [$.conjunctionAttributeSet], // Ambiguity in refinement
@@ -248,7 +247,7 @@ module.exports = grammar({
 
     dialectFilter: $ => seq(
       choice($.dialectIdFilter, $.dialectAliasFilter),
-      optional(seq(ws($), $.acceptabilitySet))
+      seq(ws($), $.acceptabilitySet)
     ),
     dialectIdFilter: $ => seq(
       /dialectid/i,
@@ -722,7 +721,7 @@ module.exports = grammar({
       repeat(choice($._nonStarChar, $._starWithNonFSlash)),
       "*/"
     ),
-    
+
     // Set operators
     conjunction: $ => prec.left(choice(
       seq(/and/i, $._mws),

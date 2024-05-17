@@ -1801,43 +1801,35 @@
           ]
         },
         {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SEQ",
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "REPEAT",
-                      "content": {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "PATTERN",
-                            "value": " \\t\\r\\n"
-                          },
-                          {
-                            "type": "SYMBOL",
-                            "name": "comment"
-                          }
-                        ]
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "PATTERN",
+                        "value": " \\t\\r\\n"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "comment"
                       }
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
+                    ]
+                  }
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "acceptabilitySet"
+                  "type": "BLANK"
                 }
               ]
             },
             {
-              "type": "BLANK"
+              "type": "SYMBOL",
+              "name": "acceptabilitySet"
             }
           ]
         }
@@ -5923,9 +5915,6 @@
     [
       "_subRefinement",
       "_subAttributeSet"
-    ],
-    [
-      "dialectFilter"
     ],
     [
       "conjunctionRefinementSet"
